@@ -29,8 +29,10 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
-        if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords do not match");
+        if (request.getConfirmPassword() != null && !request.getConfirmPassword().isBlank()) {
+            if (!request.getPassword().equals(request.getConfirmPassword())) {
+                throw new IllegalArgumentException("Passwords do not match");
+            }
         }
 
         if (userRepository.existsByEmail(request.getEmail())) {

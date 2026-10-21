@@ -29,7 +29,12 @@ const Login = () => {
       else navigate('/student/dashboard');
     } catch (err) {
       console.error(err);
-      const msg = err.response?.data?.message || 'Invalid email or password';
+      let msg = 'Invalid email or password';
+      if (err.response?.data?.message) {
+        msg = err.response.data.message;
+      } else if (err.response?.status === 404 || err.code === 'ERR_NETWORK' || !err.response) {
+        msg = 'Backend server not connected! Please deploy your backend on Render and set VITE_API_URL.';
+      }
       addToast(msg, 'error');
     } finally {
       setLoading(false);

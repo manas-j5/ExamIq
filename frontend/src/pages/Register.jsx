@@ -37,7 +37,14 @@ const Register = () => {
       else navigate('/student/dashboard');
     } catch (err) {
       console.error(err);
-      const msg = err.response?.data?.message || 'Registration failed. Email may already be in use.';
+      let msg = 'Registration failed. Email may already be in use.';
+      if (err.response?.data?.message) {
+        msg = err.response.data.message;
+      } else if (err.response?.data?.errors) {
+        msg = Object.values(err.response.data.errors).join(', ');
+      } else if (err.response?.status === 404 || err.code === 'ERR_NETWORK' || !err.response) {
+        msg = 'Backend server not connected! Please deploy your backend on Render and set VITE_API_URL.';
+      }
       addToast(msg, 'error');
     } finally {
       setLoading(false);

@@ -39,7 +39,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password, role = 'STUDENT') => {
-    const response = await authService.register({ name, email, password, role });
+    const response = await authService.register({
+      name,
+      email,
+      password,
+      confirmPassword: password,
+      role,
+    });
     const { token, id, name: userName, email: userEmail, role: userRole } = response.data;
     const userData = { id, name: userName, email: userEmail, role: userRole };
 
